@@ -10,6 +10,7 @@ const App = () => {
             <ImageAsset
                 name="renderedRoom"
             />
+            <ImageAsset name="mann" />
             <div>Computer Generated Room by Hiseous</div>
         </div>
     )

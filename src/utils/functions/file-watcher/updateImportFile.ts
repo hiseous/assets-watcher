@@ -11,8 +11,17 @@ export const updateImportFile = (props: updateImportFileProps) => {
     const importFilePath = props.importFilePath;
 
     const fileName = path.basename(filePath);
-    const fileNameWithoutExt = fileName.split('.').slice(0, -1).join('.');
-    const imageName = fileName.replace(/\..+$/, ''); //strip extension
+    
+    // let fileNameWithoutExt = fileName.split('.').slice(0, -1).join('.').replace(/[\s-]+/g, "").replace(/[^a-zA-Z0-9_]/g, "");
+    let imageName = fileName
+    .replace(/\..+$/, '') // remove extension
+    .replace(/[\s-]+/g, "") // remove all white spaces and hyphens
+    .replace(/[^a-zA-Z0-9_]/g, ""); // we are keeping letters, numbers and underscores
+
+    if (/^\d/.test(imageName)) {
+        imageName = '_' + imageName;
+    }
+
     const filePathInCode = `./images/${fileName}`;
 
     //read the current content of the import file
@@ -23,7 +32,7 @@ export const updateImportFile = (props: updateImportFileProps) => {
 
     //check if the image is already in the file
     if (!importFileContent.includes(imageName)) {
-        const importStatement = `import ${fileNameWithoutExt} from '${filePathInCode}';\n`;
+        const importStatement = `import ${imageName} from '${filePathInCode}';\n`;
 
         //find the position where the images object starts (or where the imports end)
         const imagesObjectStartIndex = importFileContent.indexOf(`\nexport const ${props.exportVariable} = {`);
